@@ -133,7 +133,7 @@ const model = new vl({
 
 // or for local inference
 const model = new vl({
-  apiUrl: "http://localhost:3475",
+  apiUrl: "http://localhost:8000",
 });
 ```
 
