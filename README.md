@@ -140,7 +140,7 @@ const model = new vl({
 
 ### Methods
 
-#### caption({ image: string, length: string, stream?: boolean })
+#### caption({ image: Buffer | Base64EncodedImage, length?: string, stream?: boolean })
 
 Generate a caption for an image.
 
@@ -159,7 +159,7 @@ const stream = await model.caption({
 });
 ```
 
-#### query({ image: string, question: string, stream?: boolean })
+#### query({ image: Buffer | Base64EncodedImage, question: string, stream?: boolean })
 
 Ask a question about an image.
 
@@ -178,7 +178,7 @@ const stream = await model.query({
 });
 ```
 
-#### detect({ image: string, object: string })
+#### detect({ image: Buffer | Base64EncodedImage, object: string })
 
 Detect specific objects in an image.
 
@@ -189,7 +189,7 @@ const result = await model.detect({
 });
 ```
 
-#### point({ image: string, object: string })
+#### point({ image: Buffer | Base64EncodedImage, object: string })
 
 Get coordinates of specific objects in an image.
 
@@ -200,10 +200,19 @@ const result = await model.point({
 });
 ```
 
+#### encodeImage( image: Buffer | Base64EncodedImage ): Promise<Base64EncodedImage>
+
+Encodes an image provided as a `Buffer` or a `Base64EncodedImage` into a Base64-encoded JPEG. If the image is already in Base64 format, the method returns it unchanged.
+
+```javascript
+const encodedImage = await model.encodeImage(imageBuffer);
+```
+
+
 ### Image Types
 
-- Buffer: Raw image data
-- Base64EncodedImage: `{ imageUrl: string }`
+- Buffer: Raw binary image data
+- Base64EncodedImage: An object in the format `{ imageUrl: string }`, where `imageUrl` contains a Base64-encoded image
 
 ### Response Types
 
@@ -218,3 +227,4 @@ const result = await model.point({
 
 - [Website](https://moondream.ai/)
 - [Demo](https://moondream.ai/playground)
+- [GitHub](https://github.com/vikhyat/moondream)
