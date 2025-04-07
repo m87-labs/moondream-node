@@ -71,7 +71,7 @@ main();
 
 ### Local Inference
 
-- Install Moondream server from: <ADD URL>
+- Install Moondream server from: !ADD LINK TO DOWNLOAD!
 - Run the local server: ./moondream-sever
 - Set the `apiUrl` parameter to the URL of the local server (the default is `http://localhost:8000`)
 
