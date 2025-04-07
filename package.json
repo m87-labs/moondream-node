@@ -1,6 +1,6 @@
 {
     "name": "moondream",
-    "version": "0.0.5",
+    "version": "1.0.0",
     "description": "TypeScript client for the Moondream AI API",
     "main": "dist/src/moondream.js",
     "types": "dist/src/moondream.d.ts",

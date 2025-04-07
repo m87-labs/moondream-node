@@ -43,8 +43,6 @@ export class vl {
     }
 
     try {
-      const MAX_SIZE = 768;
-
       // Process image with Sharp
       const metadata = await sharp(image).metadata();
 
@@ -52,19 +50,7 @@ export class vl {
         throw new Error('Unable to get image dimensions');
       }
 
-      const scale = MAX_SIZE / Math.max(metadata.width, metadata.height);
       let processedImage = sharp(image);
-
-      if (scale < 1) {
-        processedImage = processedImage.resize(
-          Math.round(metadata.width * scale),
-          Math.round(metadata.height * scale),
-          {
-            fit: 'inside',
-            withoutEnlargement: true,
-          }
-        );
-      }
 
       const buffer = await processedImage
         .toFormat('jpeg', { quality: 95 })

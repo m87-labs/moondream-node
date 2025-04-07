@@ -71,13 +71,13 @@ main();
 
 ### Local Inference
 
-- Install the `moondream` CLI: `pip install moondream`
-- Run the local server: `moondream serve --model <path-to-model>`
-- Set the `apiUrl` parameter to the URL of the local server (the default is `http://localhost:3475`)
+- Install Moondream server from: <ADD URL>
+- Run the local server: ./moondream-sever
+- Set the `apiUrl` parameter to the URL of the local server (the default is `http://localhost:8000`)
 
 ```javascript
 const model = new vl({
-  apiUrl: "http://localhost:3475",
+  apiUrl: "http://localhost:8000",
 });
 
 const image = fs.readFileSync("path/to/image.jpg");

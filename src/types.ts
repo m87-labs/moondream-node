@@ -116,7 +116,7 @@ export interface Base64EncodedImage {
   export interface ImageProcessingOptions {
     maxSize?: number;
     quality?: number;
-    format?: 'jpeg' | 'png';
+    format?: 'jpeg' | 'png' | 'gif';
   }
   
   /**
