@@ -22,7 +22,12 @@ npm install moondream
 
 ## Quick Start
 
-If you want to use the Moondream cloud (with 5,000 free requests/day), first go get your free API key from [the Moondream cloud console](https://moondream.ai/c/cloud/api-keys). If you prefer running it locally, install and run [the Moondream server](https://mooondream.ai/moondream-server). Here's code to call it:
+Choose how you want to run it:
+
+1. **Moondream Cloud**: (with 5,000 free requests/day): get a free API key from [the Moondream cloud console](https://moondream.ai/c/cloud/api-keys).
+2. **Moondream Server**: Run it locally by installing and running [the Moondream server](https://mooondream.ai/moondream-server).
+
+Once you've done at least *one* of these, try running this code:
 
 ```javascript
 import { vl } from "moondream";
