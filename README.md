@@ -4,6 +4,13 @@ Official NodeJS client library for Moondream, a tiny vision language model that 
 analyze images and answer questions about them. This client library provides easy
 access to Moondream's API endpoints for image analysis.
 
+## Features
+
+- **caption**: Generate descriptive captions for images
+- **query**: Ask questions about image content
+- **detect**: Find bounding boxes around objects in images
+- **point**: Identify the center location of specified objects in images
+
 ## Installation
 
 Install the package using npm:
@@ -20,8 +27,7 @@ yarn add moondream
 
 ## Quick Start
 
-Before using this client library, you'll need an API key to access Moondream's hosted service.
-You can get a free API key from [console.moondream.ai](https://console.moondream.ai).
+- Get your free API key from [console.moondream.ai](https://console.moondream.ai).
 
 ### Cloud
 
@@ -72,7 +78,9 @@ main();
 ### Local Inference
 
 - Install Moondream server from: !ADD LINK TO DOWNLOAD!
-- Run the local server: ./moondream-sever
+- Run the local server:
+  ```bash
+  ./moondream-server
 - Set the `apiUrl` parameter to the URL of the local server (the default is `http://localhost:8000`)
 
 ```javascript
@@ -114,24 +122,17 @@ async function main() {
 main();
 ```
 
-## Features
-
-- **caption**: Generate descriptive captions for images
-- **query**: Ask questions about image content
-- **detect**: Find bounding boxes around objects in images
-- **point**: Identify the center location of specified objects in images
-
 ## API Reference
 
 ### Constructor
 
 ```javascript
-// for cloud inference
+// Cloud inference
 const model = new vl({
   apiKey: "your-api-key",
 });
 
-// or for local inference
+// Local inference
 const model = new vl({
   apiUrl: "http://localhost:8000",
 });
@@ -150,7 +151,7 @@ const result = await model.caption({
   stream: false
 });
 
-// or with streaming
+// Generate a caption with streaming (default: False)
 const stream = await model.caption({
   image: image,
   length: "normal",
@@ -169,7 +170,7 @@ const result = await model.query({
   stream: false
 });
 
-// or with streaming
+// Ask a question with streaming (default: False)
 const stream = await model.query({
   image: image,
   question: "What's in this image?",
@@ -199,20 +200,19 @@ const result = await model.point({
 });
 ```
 
-### Input Types
+### Image Types
 
-- Images can be provided as:
-  - Buffer: Raw image data
-  - Base64EncodedImage: `{ imageUrl: string }`
+- Buffer: Raw image data
+- Base64EncodedImage: `{ imageUrl: string }`
 
 ### Response Types
-
-All methods return promises that resolve to typed responses:
 
 - CaptionOutput: `{ caption: string | AsyncGenerator }`
 - QueryOutput: `{ answer: string | AsyncGenerator }`
 - DetectOutput: `{ objects: Array<Object> }`
 - PointOutput: `{ points: Array<Point> }`
+- Region: Bounding box with coordinates (`x_min`, `y_min`, `x_max`, `y_max`)
+- Point: Coordinates (`x`, `y`) indicating the object center
 
 ## Links
 
