@@ -1,0 +1,1 @@
+// Jest setup file - currently empty as we don't need any global setup
