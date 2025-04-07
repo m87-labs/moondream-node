@@ -2,12 +2,15 @@
 
 Official Python client library for Moondream, the world's fastest multi-function VLM. This client can target either (the Moondream Cloud)[https://moondream.ai/cloud] or a (Moondream Server)[https://moondream.ai/server]. Both are free, though the cloud has a limits on the free tier.
 
-## Features
+## Capabilities
+Moondream goes beyond the typical VLM "query" ability to include more visual functions. These include:
 
 - **caption**: Generate descriptive captions for images
 - **query**: Ask questions about image content
 - **detect**: Find bounding boxes around objects in images
 - **point**: Identify the center location of specified objects in images
+
+You can try this out anytime on [Moondream's playground](https://moondream.ai/playground).
 
 ## Installation
 
@@ -17,19 +20,9 @@ Install the package using npm:
 npm install moondream
 ```
 
-Or using yarn:
-
-```bash
-yarn add moondream
-```
-
 ## Quick Start
 
-- Get your free API key from [console.moondream.ai](https://console.moondream.ai)
-
-### Cloud
-
-- Get your free API key from [the Moondream cloud console](https://moondream.ai/c/cloud/api-keys). The free tier currently supports 5,000 requests per day
+If you want to use the Moondream cloud (with 5,000 free requests/day), first go get your free API key from [the Moondream cloud console](https://moondream.ai/c/cloud/api-keys). If you prefer running it locally, install and run [the Moondream server](https://mooondream.ai/moondream-server). Here's code to call it:
 
 ```javascript
 import { vl } from "moondream";
@@ -37,57 +30,11 @@ import fs from "fs";
 
 // Initialize the client
 const model = new vl({
-  apiKey: "your-api-key",
+  apiKey: "your-api-key", // <--- only use this for Moondream Cloud
+  endpoint: "http://localhost:2020", // <--- only use this for Moondream Server
 });
 
 // Read an image file
-const image = fs.readFileSync("path/to/image.jpg");
-
-// Basic usage examples
-async function main() {
-  // Generate a caption for the image
-  const caption = await model.caption({
-    image: image,
-    length: "normal",
-    stream: false
-  });
-  console.log("Caption:", caption);
-
-  // Ask a question about the image
-  const answer = await model.query({
-    image: image,
-    question: "What's in this image?",
-    stream: false
-  });
-  console.log("Answer:", answer);
-
-  // Stream the response
-  const stream = await model.caption({
-    image: image,
-    length: "normal",
-    stream: true
-  });
-  for await (const chunk of stream.caption) {
-    process.stdout.write(chunk);
-  }
-}
-
-main();
-```
-
-### Moondream Server (to run locally)
-
-- Install and run [the Moondream server](https://mooondream.ai/moondream-server)
-- Run the local server:
-  ```bash
-  ./moondream-server
-- Set the `endpoint` parameter to the URL of the local server (the local server default is `http://localhost:2020`)
-
-```javascript
-const model = new vl({
-  endpoint: "http://localhost:2020",
-});
-
 const image = fs.readFileSync("path/to/image.jpg");
 
 // Basic usage examples
