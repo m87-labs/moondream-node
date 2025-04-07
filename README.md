@@ -43,11 +43,6 @@ const model = new vl({
   endpoint: "http://localhost:2020",
 });
 
-const model = new vl({
-  apiKey: "your-api-key", // <--- only use this for Moondream Cloud
-  endpoint: "http://localhost:2020", // <--- only use this for Moondream Server
-});
-
 // Read an image file
 const image = fs.readFileSync("path/to/image.jpg");
 
