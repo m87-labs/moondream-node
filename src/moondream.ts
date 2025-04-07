@@ -17,18 +17,18 @@ import {
 
 export interface MoondreamVLConfig {
   apiKey?: string;
-  apiUrl?: string;
+  endpoint?: string;
 }
-const DEFAULT_API_URL = 'https://api.moondream.ai/v1';
+const DEFAULT_ENDPOINT = 'https://api.moondream.ai/v1';
 
 export class vl {
   private apiKey: string;
-  private apiUrl: string;
+  private endpoint: string;
 
   constructor(config: MoondreamVLConfig) {
     this.apiKey = config.apiKey || '';
-    this.apiUrl = config.apiUrl || DEFAULT_API_URL;
-    if (this.apiKey === '' && this.apiUrl === DEFAULT_API_URL) {
+    this.endpoint = config.endpoint || DEFAULT_ENDPOINT;
+    if (this.apiKey === '' && this.endpoint === DEFAULT_ENDPOINT) {
       throw new Error(
         'An apiKey is required for cloud inference. '
       );
@@ -69,7 +69,7 @@ export class vl {
 
   private makeRequest(path: string, body: any, stream: boolean = false): Promise<any> {
     return new Promise((resolve, reject) => {
-      const url = new URL(this.apiUrl + path);
+      const url = new URL(this.endpoint + path);
       const requestBody = JSON.stringify(body);
 
       const options = {

@@ -96,7 +96,7 @@ export interface Base64EncodedImage {
    */
   export interface ClientConfig {
     apiKey: string;
-    apiUrl?: string;
+    endpoint?: string;
     timeout?: number;
     retries?: number;
   }

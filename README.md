@@ -1,8 +1,6 @@
 # Moondream NodeJS Client Library
 
-Official NodeJS client library for Moondream, a tiny vision language model that can
-analyze images and answer questions about them. This client library provides easy
-access to Moondream's API endpoints for image analysis.
+Official Python client library for Moondream, the world's fastest multi-function VLM. This client can target either (the Moondream Cloud)[https://moondream.ai/cloud] or a (Moondream Server)[https://moondream.ai/server]. Both are free, though the cloud has a limits on the free tier.
 
 ## Features
 
@@ -27,9 +25,11 @@ yarn add moondream
 
 ## Quick Start
 
-- Get your free API key from [console.moondream.ai](https://console.moondream.ai).
+- Get your free API key from [console.moondream.ai](https://console.moondream.ai)
 
 ### Cloud
+
+- Get your free API key from [the Moondream cloud console](https://moondream.ai/c/cloud/api-keys). The free tier currently supports 5,000 requests per day
 
 ```javascript
 import { vl } from "moondream";
@@ -75,17 +75,17 @@ async function main() {
 main();
 ```
 
-### Local Inference
+### Moondream Server (to run locally)
 
-- Install Moondream server from: !ADD LINK TO DOWNLOAD!
+- Install and run [the Moondream server](https://mooondream.ai/moondream-server)
 - Run the local server:
   ```bash
   ./moondream-server
-- Set the `apiUrl` parameter to the URL of the local server (the default is `http://localhost:8000`)
+- Set the `endpoint` parameter to the URL of the local server (the local server default is `http://localhost:2020`)
 
 ```javascript
 const model = new vl({
-  apiUrl: "http://localhost:8000",
+  endpoint: "http://localhost:2020",
 });
 
 const image = fs.readFileSync("path/to/image.jpg");
@@ -134,7 +134,7 @@ const model = new vl({
 
 // Local inference
 const model = new vl({
-  apiUrl: "http://localhost:8000",
+  endpoint: "http://localhost:2020",
 });
 ```
 
@@ -226,5 +226,5 @@ const encodedImage = await model.encodeImage(imageBuffer);
 ## Links
 
 - [Website](https://moondream.ai/)
-- [Demo](https://moondream.ai/playground)
+- [Try it out on the free playground](https://moondream.ai/playground)
 - [GitHub](https://github.com/vikhyat/moondream)

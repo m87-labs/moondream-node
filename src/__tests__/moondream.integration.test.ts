@@ -17,8 +17,8 @@ describe('MoondreamClient Integration Tests', () => {
     let imageBuffer: Base64EncodedImage;
 
     beforeAll(async () => {
-        // Create two clients with different apiURLs: one for localhost and one for cloud
-        localClient = new vl({apiKey: apiKey, apiUrl: "http://localhost:8000"});
+        // Create two clients with different endpoints: one for localhost and one for cloud
+        localClient = new vl({apiKey: apiKey, endpoint: "http://localhost:2020"});
         cloudClient = new vl({apiKey: apiKey});
         // Load test image and convert to base64
         const rawBuffer = await fs.readFile(path.join(__dirname, '../../assets/how-to-be-a-people-person-1662995088.jpg'));
