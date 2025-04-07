@@ -1,6 +1,6 @@
 # Moondream NodeJS Client Library
 
-Official Python client library for Moondream, the world's fastest multi-function VLM. This client can target either (the Moondream Cloud)[https://moondream.ai/cloud] or a (Moondream Server)[https://moondream.ai/server]. Both are free, though the cloud has a limits on the free tier.
+Official Python client library for Moondream, a fast multi-function VLM. This client can target either (the Moondream Cloud)[https://moondream.ai/cloud] or a (Moondream Server)[https://moondream.ai/server]. Both are free, though the cloud has a limits on the free tier.
 
 ## Capabilities
 Moondream goes beyond the typical VLM "query" ability to include more visual functions. These include:
