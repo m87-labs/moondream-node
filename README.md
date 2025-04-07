@@ -33,7 +33,16 @@ Once you've done at least *one* of these, try running this code:
 import { vl } from "moondream";
 import fs from "fs";
 
-// Initialize the client
+// For Moondream Cloud
+const model = new vl({
+  apiKey: "<your-api-key>",
+});
+
+// ...or a local Moondream Server
+const model = new vl({
+  endpoint: "http://localhost:2020",
+});
+
 const model = new vl({
   apiKey: "your-api-key", // <--- only use this for Moondream Cloud
   endpoint: "http://localhost:2020", // <--- only use this for Moondream Server
