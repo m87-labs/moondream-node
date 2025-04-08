@@ -40,7 +40,7 @@ const model = new vl({
 
 // ...or a local Moondream Server
 const model = new vl({
-  endpoint: "http://localhost:2020",
+  endpoint: "http://localhost:2020/v1",
 });
 
 // Read an image file
@@ -90,7 +90,7 @@ const model = new vl({
 
 // Local inference
 const model = new vl({
-  endpoint: "http://localhost:2020",
+  endpoint: "http://localhost:2020/v1",
 });
 ```
 
