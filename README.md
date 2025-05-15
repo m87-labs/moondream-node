@@ -1,6 +1,6 @@
 # Moondream NodeJS Client Library
 
-Official Python client library for Moondream, a fast multi-function VLM. This client can target either the [Moondream Cloud](https://moondream.ai/cloud) or a [Moondream Server](https://moondream.ai/server). Both are free, though the cloud has a limits on the free tier.
+Official NodeJS client library for Moondream, a fast multi-function VLM. This client can target either the [Moondream Cloud](https://moondream.ai/cloud) or a [Moondream Station](https://moondream.ai/station). Both are free, though the cloud has a limits on the free tier.
 
 ## Capabilities
 Moondream goes beyond the typical VLM "query" ability to include more visual functions. These include:
@@ -25,7 +25,7 @@ npm install moondream
 Choose how you want to run it:
 
 1. **Moondream Cloud**: (with 5,000 free requests/day): get a free API key from [the Moondream cloud console](https://moondream.ai/c/cloud/api-keys).
-2. **Moondream Server**: Run it locally by installing and running [the Moondream server](https://mooondream.ai/moondream-server).
+2. **Moondream Server**: Run it locally by installing and running [the Moondream server](https://moondream.ai/moondream-server).
 
 Once you've done at least *one* of these, try running this code:
 
