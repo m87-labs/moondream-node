@@ -165,11 +165,17 @@ export class vl {
   ): Promise<CaptionOutput> {
     const encodedImage = await this.encodeImage(request.image);
 
-    const response = await this.makeRequest('/caption', {
+    const requestBody: any = {
       image_url: encodedImage.imageUrl,
       length: request.length,
       stream: request.stream,
-    }, request.stream);
+    };
+
+    if (request.variant) {
+      requestBody.variant = request.variant;
+    }
+
+    const response = await this.makeRequest('/caption', requestBody, request.stream);
 
     if (request.stream) {
       return { caption: this.streamResponse(response) };
@@ -181,19 +187,35 @@ export class vl {
   public async query(
     request: QueryRequest
   ): Promise<QueryOutput> {
-    const encodedImage = await this.encodeImage(request.image);
-
-    const response = await this.makeRequest('/query', {
-      image_url: encodedImage.imageUrl,
+    let requestBody: any = {
       question: request.question,
       stream: request.stream,
-    }, request.stream);
+    };
+
+    if (request.image) {
+      const encodedImage = await this.encodeImage(request.image);
+      requestBody.image_url = encodedImage.imageUrl;
+    }
+
+    if (request.reasoning !== undefined) {
+      requestBody.reasoning = request.reasoning;
+    }
+
+    if (request.variant) {
+      requestBody.variant = request.variant;
+    }
+
+    const response = await this.makeRequest('/query', requestBody, request.stream);
 
     if (request.stream) {
       return { answer: this.streamResponse(response) };
     }
 
-    return { answer: response.answer };
+    const result: QueryOutput = { answer: response.answer };
+    if (response.reasoning) {
+      result.reasoning = response.reasoning;
+    }
+    return result;
   }
 
   public async detect(
@@ -201,10 +223,16 @@ export class vl {
   ): Promise<DetectOutput> {
     const encodedImage = await this.encodeImage(request.image);
 
-    const response = await this.makeRequest('/detect', {
+    const requestBody: any = {
       image_url: encodedImage.imageUrl,
       object: request.object,
-    });
+    };
+
+    if (request.variant) {
+      requestBody.variant = request.variant;
+    }
+
+    const response = await this.makeRequest('/detect', requestBody);
 
     return { objects: response.objects };
   }
@@ -214,10 +242,16 @@ export class vl {
   ): Promise<PointOutput> {
     const encodedImage = await this.encodeImage(request.image);
 
-    const response = await this.makeRequest('/point', {
+    const requestBody: any = {
       image_url: encodedImage.imageUrl,
       object: request.object,
-    });
+    };
+
+    if (request.variant) {
+      requestBody.variant = request.variant;
+    }
+
+    const response = await this.makeRequest('/point', requestBody);
 
     return { points: response.points };
   }
