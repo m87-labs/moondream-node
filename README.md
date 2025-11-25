@@ -1,20 +1,22 @@
-# Moondream NodeJS Client Library
+# Moondream Node.js Client Library
 
-Official Python client library for Moondream, a fast multi-function VLM. This client can target either the [Moondream Cloud](https://moondream.ai/cloud) or a [Moondream Server](https://moondream.ai/server). Both are free, though the cloud has a limits on the free tier.
+Official Node.js client library for Moondream, a fast multi-function VLM. This client can target either [Moondream Cloud](https://moondream.ai/cloud) or [Moondream Station](https://moondream.ai/station).
 
 ## Capabilities
-Moondream goes beyond the typical VLM "query" ability to include more visual functions. These include:
 
-- **caption**: Generate descriptive captions for images
-- **query**: Ask questions about image content
-- **detect**: Find bounding boxes around objects in images
-- **point**: Identify the center location of specified objects in images
+Moondream goes beyond the typical VLM "query" ability to include more visual functions:
 
-You can try this out anytime on [Moondream's playground](https://moondream.ai/playground).
+| Method | Description |
+|--------|-------------|
+| `caption` | Generate descriptive captions for images |
+| `query` | Ask questions about image content |
+| `detect` | Find bounding boxes around objects in images |
+| `point` | Identify the center location of specified objects |
+| `segment` | Generate an SVG path segmentation mask for objects |
+
+Try it out on [Moondream's playground](https://moondream.ai/playground).
 
 ## Installation
-
-Install the package using npm:
 
 ```bash
 npm install moondream
@@ -22,60 +24,37 @@ npm install moondream
 
 ## Quick Start
 
-Choose how you want to run it:
+Choose how you want to run Moondream:
 
-1. **Moondream Cloud**: (with 5,000 free requests/day): get a free API key from [the Moondream cloud console](https://moondream.ai/c/cloud/api-keys).
-2. **Moondream Server**: Run it locally by installing and running [the Moondream server](https://mooondream.ai/moondream-server).
-
-Once you've done at least *one* of these, try running this code:
+1. **Moondream Cloud** — Get an API key from the [cloud console](https://moondream.ai/c/cloud/api-keys)
+2. **Moondream Station** — Run locally by installing [Moondream Station](https://moondream.ai/station)
 
 ```javascript
-import { vl } from "moondream";
-import fs from "fs";
+import { vl } from 'moondream';
+import fs from 'fs';
 
-// For Moondream Cloud
-const model = new vl({
-  apiKey: "<your-api-key>",
-});
+// Initialize with Moondream Cloud
+const model = new vl({ apiKey: '<your-api-key>' });
 
-// ...or a local Moondream Server
-const model = new vl({
-  endpoint: "http://localhost:2020/v1",
-});
+// Or initialize with a local Moondream Station
+const model = new vl({ endpoint: 'http://localhost:2020/v1' });
 
-// Read an image file
-const image = fs.readFileSync("path/to/image.jpg");
+// Load an image
+const image = fs.readFileSync('path/to/image.jpg');
 
-// Basic usage examples
-async function main() {
-  // Generate a caption for the image
-  const caption = await model.caption({
-    image: image,
-    length: "normal",
-    stream: false
-  });
-  console.log("Caption:", caption);
+// Generate a caption
+const caption = await model.caption({ image });
+console.log('Caption:', caption.caption);
 
-  // Ask a question about the image
-  const answer = await model.query({
-    image: image,
-    question: "What's in this image?",
-    stream: false
-  });
-  console.log("Answer:", answer);
+// Ask a question
+const answer = await model.query({ image, question: "What's in this image?" });
+console.log('Answer:', answer.answer);
 
-  // Stream the response
-  const stream = await model.caption({
-    image: image,
-    length: "normal",
-    stream: true
-  });
-  for await (const chunk of stream.caption) {
-    process.stdout.write(chunk);
-  }
+// Stream the response
+const stream = await model.caption({ image, stream: true });
+for await (const chunk of stream.caption) {
+  process.stdout.write(chunk);
 }
-
-main();
 ```
 
 ## API Reference
@@ -83,104 +62,144 @@ main();
 ### Constructor
 
 ```javascript
-// Cloud inference
-const model = new vl({
-  apiKey: "your-api-key",
-});
-
-// Local inference
-const model = new vl({
-  endpoint: "http://localhost:2020/v1",
-});
+const model = new vl({ apiKey: '<your-api-key>' });           // Cloud
+const model = new vl({ endpoint: 'http://localhost:2020/v1' }); // Local
 ```
 
 ### Methods
 
-#### caption({ image: Buffer | Base64EncodedImage, length?: string, stream?: boolean })
+#### `caption({ image, length?, stream? })`
 
 Generate a caption for an image.
 
-```javascript
-const result = await model.caption({
-  image: image,
-  length: "normal",
-  stream: false
-});
+**Parameters:**
+- `image` — `Buffer` or `Base64EncodedImage`
+- `length` — `"normal"`, `"short"`, or `"long"` (default: `"normal"`)
+- `stream` — `boolean` (default: `false`)
 
-// Generate a caption with streaming (default: False)
-const stream = await model.caption({
-  image: image,
-  length: "normal",
-  stream: true
-});
+**Returns:** `CaptionOutput` — `{ caption: string | AsyncGenerator }`
+
+```javascript
+const result = await model.caption({ image, length: 'short' });
+console.log(result.caption);
+
+// With streaming
+const stream = await model.caption({ image, stream: true });
+for await (const chunk of stream.caption) {
+  process.stdout.write(chunk);
+}
 ```
 
-#### query({ image: Buffer | Base64EncodedImage, question: string, stream?: boolean })
+---
+
+#### `query({ image?, question, stream? })`
 
 Ask a question about an image.
 
-```javascript
-const result = await model.query({
-  image: image,
-  question: "What's in this image?",
-  stream: false
-});
+**Parameters:**
+- `image` — `Buffer` or `Base64EncodedImage` (optional)
+- `question` — `string`
+- `stream` — `boolean` (default: `false`)
 
-// Ask a question with streaming (default: False)
-const stream = await model.query({
-  image: image,
-  question: "What's in this image?",
-  stream: true
-});
+**Returns:** `QueryOutput` — `{ answer: string | AsyncGenerator }`
+
+```javascript
+const result = await model.query({ image, question: "What's in this image?" });
+console.log(result.answer);
+
+// With streaming
+const stream = await model.query({ image, question: "Describe this", stream: true });
+for await (const chunk of stream.answer) {
+  process.stdout.write(chunk);
+}
 ```
 
-#### detect({ image: Buffer | Base64EncodedImage, object: string })
+---
+
+#### `detect({ image, object })`
 
 Detect specific objects in an image.
 
+**Parameters:**
+- `image` — `Buffer` or `Base64EncodedImage`
+- `object` — `string`
+
+**Returns:** `DetectOutput` — `{ objects: DetectedObject[] }`
+
 ```javascript
-const result = await model.detect({
-  image: image,
-  object: "car"
-});
+const result = await model.detect({ image, object: 'car' });
+console.log(result.objects);
 ```
 
-#### point({ image: Buffer | Base64EncodedImage, object: string })
+---
+
+#### `point({ image, object })`
 
 Get coordinates of specific objects in an image.
 
-```javascript
-const result = await model.point({
-  image: image,
-  object: "person"
-});
-```
+**Parameters:**
+- `image` — `Buffer` or `Base64EncodedImage`
+- `object` — `string`
 
-#### encodeImage( image: Buffer | Base64EncodedImage ): Promise<Base64EncodedImage>
-
-Encodes an image provided as a `Buffer` or a `Base64EncodedImage` into a Base64-encoded JPEG. If the image is already in Base64 format, the method returns it unchanged.
+**Returns:** `PointOutput` — `{ points: Point[] }`
 
 ```javascript
-const encodedImage = await model.encodeImage(imageBuffer);
+const result = await model.point({ image, object: 'person' });
+console.log(result.points);
 ```
 
+---
 
-### Image Types
+#### `segment({ image, object, spatialRefs?, stream? })`
 
-- Buffer: Raw binary image data
-- Base64EncodedImage: An object in the format `{ imageUrl: string }`, where `imageUrl` contains a Base64-encoded image
+Segment an object from an image and return an SVG path.
 
-### Response Types
+**Parameters:**
+- `image` — `Buffer` or `Base64EncodedImage`
+- `object` — `string`
+- `spatialRefs` — `Array<[x, y] | [x1, y1, x2, y2]>` — optional spatial hints (normalized 0-1)
+- `stream` — `boolean` (default: `false`)
 
-- CaptionOutput: `{ caption: string | AsyncGenerator }`
-- QueryOutput: `{ answer: string | AsyncGenerator }`
-- DetectOutput: `{ objects: Array<Object> }`
-- PointOutput: `{ points: Array<Point> }`
-- Region: Bounding box with coordinates (`x_min`, `y_min`, `x_max`, `y_max`)
-- Point: Coordinates (`x`, `y`) indicating the object center
+**Returns:**
+- Non-streaming: `SegmentOutput` — `{ path: string, bbox?: SegmentBbox }`
+- Streaming: `SegmentStreamOutput` — `{ stream: AsyncGenerator<SegmentStreamChunk> }`
+
+```javascript
+const result = await model.segment({ image, object: 'cat' });
+console.log(result.path);  // SVG path string
+console.log(result.bbox);  // { x_min, y_min, x_max, y_max }
+
+// With spatial hint (point)
+const result = await model.segment({ image, object: 'cat', spatialRefs: [[0.5, 0.5]] });
+
+// With streaming
+const stream = await model.segment({ image, object: 'cat', stream: true });
+for await (const update of stream.stream) {
+  if (update.bbox && !update.completed) {
+    console.log('Bbox:', update.bbox);  // Available immediately
+  }
+  if (update.chunk) {
+    process.stdout.write(update.chunk);  // Coarse path chunks
+  }
+  if (update.completed) {
+    console.log('Final path:', update.path);  // Refined path
+  }
+}
+```
+
+### Types
+
+| Type | Description |
+|------|-------------|
+| `Buffer` | Raw binary image data |
+| `Base64EncodedImage` | `{ imageUrl: string }` with base64-encoded image |
+| `DetectedObject` | Bounding box with `x_min`, `y_min`, `x_max`, `y_max` |
+| `Point` | Coordinates with `x`, `y` indicating object center |
+| `SegmentBbox` | Bounding box with `x_min`, `y_min`, `x_max`, `y_max` |
+| `SpatialRef` | `[x, y]` point or `[x1, y1, x2, y2]` bbox, normalized to [0, 1] |
 
 ## Links
 
 - [Website](https://moondream.ai/)
-- [Try it out on the free playground](https://moondream.ai/playground)
+- [Playground](https://moondream.ai/playground)
 - [GitHub](https://github.com/vikhyat/moondream)

@@ -176,3 +176,54 @@ export interface Point {
 export interface PointOutput {
   points: Point[];
 }
+
+/**
+ * Spatial reference for segmentation - either a point [x, y] or bbox [x1, y1, x2, y2]
+ * Values are normalized to [0, 1]
+ */
+export type SpatialRef = [number, number] | [number, number, number, number];
+
+/**
+ * Request structure for segmentation requests
+ */
+export interface SegmentRequest extends BaseRequest {
+  image: Buffer | Base64EncodedImage;
+  object: string;
+  spatialRefs?: SpatialRef[];
+  stream?: boolean;
+}
+
+/**
+ * Bounding box for segmentation result
+ */
+export interface SegmentBbox {
+  x_min: number;
+  y_min: number;
+  x_max: number;
+  y_max: number;
+}
+
+/**
+ * Response structure for non-streaming segmentation requests
+ */
+export interface SegmentOutput {
+  path: string;
+  bbox?: SegmentBbox;
+}
+
+/**
+ * Streaming update for segmentation
+ */
+export interface SegmentStreamChunk {
+  bbox?: SegmentBbox;
+  chunk?: string;
+  path?: string;
+  completed?: boolean;
+}
+
+/**
+ * Response structure for streaming segmentation requests
+ */
+export interface SegmentStreamOutput {
+  stream: AsyncGenerator<SegmentStreamChunk, void, unknown>;
+}

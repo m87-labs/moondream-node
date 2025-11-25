@@ -9,10 +9,14 @@ import {
   QueryOutput,
   DetectOutput,
   PointOutput,
+  SegmentOutput,
+  SegmentStreamOutput,
+  SegmentStreamChunk,
   CaptionRequest,
   QueryRequest,
   DetectRequest,
   PointRequest,
+  SegmentRequest,
 } from './types';
 
 export interface MoondreamVLConfig {
@@ -254,5 +258,109 @@ export class vl {
     const response = await this.makeRequest('/point', requestBody);
 
     return { points: response.points };
+  }
+
+  private async* streamSegmentResponse(response: any): AsyncGenerator<SegmentStreamChunk, void, unknown> {
+    let buffer = '';
+
+    try {
+      for await (const chunk of response) {
+        buffer += chunk.toString();
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              const msgType = data.type || '';
+
+              if (msgType === 'bbox') {
+                yield { bbox: data.bbox };
+              } else if (msgType === 'path_delta') {
+                if (data.chunk) {
+                  yield { chunk: data.chunk };
+                }
+              } else if (msgType === 'final') {
+                yield {
+                  path: data.path || '',
+                  bbox: data.bbox,
+                  completed: true,
+                };
+                return;
+              }
+            } catch (error) {
+              throw new Error(`Failed to parse JSON response from server: ${(error as Error).message}`);
+            }
+          }
+        }
+      }
+
+      // Handle any remaining data in the buffer
+      if (buffer) {
+        const lines = buffer.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              const msgType = data.type || '';
+
+              if (msgType === 'bbox') {
+                yield { bbox: data.bbox };
+              } else if (msgType === 'path_delta') {
+                if (data.chunk) {
+                  yield { chunk: data.chunk };
+                }
+              } else if (msgType === 'final') {
+                yield {
+                  path: data.path || '',
+                  bbox: data.bbox,
+                  completed: true,
+                };
+              }
+            } catch (error) {
+              throw new Error(`Failed to parse JSON response from server: ${(error as Error).message}`);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      throw new Error(`Failed to stream response: ${(error as Error).message}`);
+    }
+  }
+
+  public async segment(
+    request: SegmentRequest
+  ): Promise<SegmentOutput | SegmentStreamOutput> {
+    const encodedImage = await this.encodeImage(request.image);
+
+    const requestBody: any = {
+      image_url: encodedImage.imageUrl,
+      object: request.object,
+      stream: request.stream || false,
+    };
+
+    if (request.spatialRefs) {
+      requestBody.spatial_refs = request.spatialRefs;
+    }
+
+    if (request.settings) {
+      requestBody.settings = request.settings;
+    }
+
+    if (request.variant) {
+      requestBody.variant = request.variant;
+    }
+
+    const response = await this.makeRequest('/segment', requestBody, request.stream);
+
+    if (request.stream) {
+      return { stream: this.streamSegmentResponse(response) };
+    }
+
+    return {
+      path: response.path,
+      bbox: response.bbox,
+    };
   }
 }
