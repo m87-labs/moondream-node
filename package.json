@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/m87-labs/moondream-node"
+    "url": "git+https://github.com/m87-labs/moondream-node.git"
   },
   "bugs": {
     "url": "https://github.com/m87-labs/moondream-node/issues"
