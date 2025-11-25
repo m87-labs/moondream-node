@@ -1,7 +1,7 @@
 {
   "name": "moondream",
-  "version": "0.1.0",
-  "description": "A lightweight TypeScript client for interacting with the Moondream AI vision API.",
+  "version": "0.2.0",
+  "description": "Official Node.js client for Moondream, a fast and efficient vision language model.",
   "main": "dist/src/moondream.js",
   "types": "dist/src/moondream.d.ts",
   "scripts": {
